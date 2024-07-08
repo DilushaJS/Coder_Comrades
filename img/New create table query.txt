@@ -1,0 +1,108 @@
+CREATE TABLE `db1`.`user` (
+`UserId` VARCHAR(45) NOT NULL,
+`username` VARCHAR(255) NULL,
+`name` VARCHAR(255) NULL,
+`email` VARCHAR(45) NULL,
+`dateofbirth` DATETIME NULL,
+`password` CHAR(45) NULL,
+`feid` VARCHAR(45) NULL,
+PRIMARY KEY (`UserId`));
+
+
+CREATE TABLE `db1`.`fersystem` (
+`FeId` VARCHAR(45) NOT NULL,
+`facialdata` VARCHAR(255) NULL,
+INDEX `FeId_idx` (`FeId` ASC) VISIBLE,
+CONSTRAINT `FeId`
+FOREIGN KEY (`FeId`)
+REFERENCES `db1`.`user` (`UserId`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION);
+
+
+CREATE TABLE `db1`.`emotion` (
+`EmotionId` VARCHAR(45) NOT NULL,
+`emotiontype` VARCHAR(255) NULL,
+PRIMARY KEY (`EmotionId`));
+
+
+CREATE TABLE `db1`.`favourite` (
+`FvId` VARCHAR(45) NOT NULL,
+`musiclink` VARCHAR(255) NULL,
+PRIMARY KEY (`FvId`));
+
+
+CREATE TABLE `db1`.`reccomendedcontentlist` (
+`RecContentId` VARCHAR(45) NOT NULL,
+`reccontenttype` VARCHAR(255) NULL,
+`reccontentlink` VARCHAR(255) NULL,
+PRIMARY KEY (`RecContentId`));
+
+
+ALTER TABLE `db1`.`emotion`
+ADD CONSTRAINT `fe_id`
+FOREIGN KEY (`EmotionId`)
+REFERENCES `db1`.`fersystem` (`FeId`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+
+ALTER TABLE `db1`.`favourite`
+ADD COLUMN `reccontentid` VARCHAR(45) NULL AFTER `musiclink`,
+ADD INDEX `reccontent_id_idx` (`reccontentid` ASC) VISIBLE;
+
+
+ALTER TABLE `db1`.`favourite`
+ADD CONSTRAINT `reccontent_id`
+FOREIGN KEY (`reccontentid`)
+REFERENCES `db1`.`reccomendedcontentlist` (`RecContentId`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+
+CREATE TABLE `db1`.`contentmanagementsystem` (
+`ContentId` VARCHAR(45) NOT NULL,
+`contentlist` VARCHAR(255) NULL,
+`contenttype` VARCHAR(255) NULL,
+`prioritynum` VARCHAR(255) NULL,
+PRIMARY KEY (`ContentId`));
+
+
+ALTER TABLE `db1`.`contentmanagementsystem`
+ADD CONSTRAINT `contentid`
+FOREIGN KEY (`ContentId`)
+REFERENCES `db1`.`emotion` (`EmotionId`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+
+CREATE TABLE `db1`.`musicplaybackcontrolsystem` (
+`musiccontrolsystem` VARCHAR(45) NOT NULL,
+`volume` VARCHAR(35) NULL,
+PRIMARY KEY (`musiccontrolsystem`));
+
+
+ALTER TABLE `db1`.`musicplaybackcontrolsystem`
+CHANGE COLUMN `musiccontrolsystem` `musiccontrolid` VARCHAR(45) NOT NULL ;
+ALTER TABLE `db1`.`musicplaybackcontrolsystem`
+ADD CONSTRAINT `musiccontrolid`
+FOREIGN KEY (`musiccontrolid`)
+REFERENCES `db1`.`emotion` (`EmotionId`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+
+CREATE TABLE `db1`.`ambientlightcontrolsystem` (
+`LightId` VARCHAR(45) NOT NULL,
+`lightarrangement` VARCHAR(255) NULL,
+`lightintensity` VARCHAR(255) NULL,
+`prioritynum` VARCHAR(35) NULL,
+PRIMARY KEY (`LightId`));
+
+
+ALTER TABLE `db1`.`ambientlightcontrolsystem`
+ADD CONSTRAINT `lightid`
+FOREIGN KEY (`LightId`)
+REFERENCES `db1`.`emotion` (`EmotionId`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;

@@ -1,0 +1,4 @@
+import mysql.connecter
+from tkinter import*
+
+mydb=mysql.connecter.connect(host="localhost",user="root",password="password",database="smart")

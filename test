@@ -1,0 +1,42 @@
+import tkinter as tk
+from PIL import Image, ImageTk
+
+# ... other imports and class definitions
+
+frame_styles = {"relief": "groove",
+                "bd": 3, "bg": "#ffffff",
+                "fg": "#073bb3", "font": ("Arial", 30, "bold")}
+
+
+class main(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+
+        main_frame = tk.Frame(self, bg="#ffffff", height=800, width=600, bd=0)  # background frame
+        main_frame.pack(fill="both", expand="true")
+
+        self.geometry("600x800")  # Sets window size
+        self.resizable(True, True)  # Allows resizing
+
+        # ... other widget definitions
+
+        img1 = "E:/gui/img/img.png"  # Adjust the path if needed
+        try:
+            image = Image.open(img1)  # Open the image file
+            logo = ImageTk.PhotoImage(image)  # Convert to Tkinter compatible format
+        except FileNotFoundError:
+            print("Error: Image file not found!")  # Handle potential error
+            # You can add a placeholder image here
+
+        img_label = tk.Label(frame_11, image=logo)
+        img_label.pack()
+        img_label.place(rely=0.025, relx=0.35)
+
+        # ... other widget definitions
+
+        button = ttk.Button(frame_11, text="start", command=lambda: start())
+        button.place(rely=0.7, relx=0.4, height=100, width=150)
+
+        def start():
+            main.destroy(self)  # Destroy the current window
+            LoginPage()  # Create a new LoginPage instance
