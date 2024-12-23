@@ -1,0 +1,46 @@
+import tkinter as tk
+import time
+
+def update_gif(label):
+    """Updates the GIF frame in the label after a specified delay."""
+    global gif_index
+    gif_index = (gif_index + 1) % len(gif_frames)  # Wrap around for continuous animation
+    label.config(image=gif_frames[gif_index])
+    label.after(100)  # Update frame after 100 milliseconds (adjust for desired speed)
+    update_gif(label)  # Recursively call to keep the animation going
+
+def main():
+    root = tk.Tk()
+    root.title("GIF Display")
+
+    # Ensure correct GIF path
+    gif_path = "path/to/your/gif.gif"  # Replace with the actual path to your GIF file
+    try:
+        with open(gif_path, "rb") as gif_file:
+            gif_data = gif_file.read()
+    except FileNotFoundError:
+        print(f"Error: GIF file '{gif_path}' not found.")
+        return
+
+    # Load the GIF frames using PhotoImage (assuming a valid GIF)
+    global gif_frames, gif_index
+    gif_frames = []
+    gif = tk.PhotoImage(master=root, data=gif_data, format="gif -index 0")  # Load first frame
+    gif_frames.append(gif)
+    for i in range(1, gif.num_frames()):  # Load remaining frames
+        gif = tk.PhotoImage(master=root, data=gif_data, format="gif -index %i" % i)
+        gif_frames.append(gif)
+
+    gif_index = 0  # Initialize frame index
+
+    # Create a label to display the GIF
+    label = tk.Label(root)
+    label.pack()
+
+    # Start the animation loop
+    update_gif(label)
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
